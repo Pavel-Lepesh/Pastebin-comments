@@ -1,0 +1,2 @@
+class ParentCommentNotFoundError(Exception):
+    pass

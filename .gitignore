@@ -1,0 +1,10 @@
+/.idea
+/.idea/
+/.venv
+/.env
+__pycache__/
+**/__pycache__/
+*.py[cod]
+/mongo_example.py
+/test.py
+/logs
