@@ -21,7 +21,7 @@ async def create_comment(comment_data: CommentScheme) -> Comment:
     return comment
 
 
-@router.get("/search")
-async def search_comments(body: str) -> List[Comment]:
-    comments = await CommentsDAO.find_comment(body=body)
-    return comments
+@router.get("/{comment_id}")
+async def get_comment_by_id(comment_id: PydanticObjectId) -> Comment:
+    comment = await CommentsDAO.get_comment_by_id(comment_id)
+    return comment
