@@ -9,7 +9,7 @@ def register_exception_handlers(app: FastAPI):
     async def parent_comment_not_found_handler(request: Request, exc: ParentCommentNotFoundError):
         return JSONResponse(
             status_code=status.HTTP_404_NOT_FOUND,
-            content={"detail": str(exc)}
+            content={"detail": "Parent comment wasn't found"}
         )
 
     @app.exception_handler(Exception)

@@ -4,6 +4,7 @@ from typing import Annotated
 from app.comments.schemas import CommentScheme
 from app.comments.models import Comment
 from app.comments.dao import CommentsDAO
+from app.comments.services import CommentService
 from loguru import logger
 from app.comments.dependencies import get_user_id
 
@@ -19,8 +20,7 @@ async def create_comment(
         note_hash_link: str,
         comment_data: CommentScheme,
         user_id: int = Depends(get_user_id)) -> Comment:
-    comment = await CommentsDAO.insert_comment(comment_data, user_id, note_hash_link)
-    logger.info(f"Comment id={comment.id} created")
+    comment = await CommentService.create_comment(comment_data, user_id, note_hash_link)
     return comment
 
 
