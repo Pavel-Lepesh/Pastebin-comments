@@ -1,7 +1,7 @@
 from beanie import PydanticObjectId
 
 from app.comments.dao import CommentsDAO
-from app.comments.schemas import CommentScheme, CommentInsertScheme
+from app.comments.schemas import CommentScheme, CommentInsertScheme, CommentUpdateScheme
 from beanie.exceptions import DocumentNotFound
 from app.exceptions.exceptions import ParentCommentNotFoundError, ParentConflict, ObjectNotFound
 from loguru import logger
@@ -18,7 +18,7 @@ class CommentService:
             note_hash_link: str
     ) -> Comment:
         """Comment creation with checking if a parent comment exists"""
-        parent_comment = await CommentsDAO.get_comment_by_id(comment_data.parent_id) if comment_data.parent_id else None
+        parent_comment = await CommentsDAO.get_comment_by_id(comment_data.parent_id, False) if comment_data.parent_id else None
 
         if comment_data.parent_id and not parent_comment:
             logger.error("Parent comment wasn't found")
@@ -65,3 +65,20 @@ class CommentService:
         if not children:  # mongo doesn't fetch children, but outer model doesn't match pydantic scheme
             comment.children = []
         return comment
+
+    @classmethod
+    async def update_comment(cls, comment_id: PydanticObjectId, comment_data: CommentUpdateScheme) -> None:
+        comment = await CommentsDAO.get_comment_by_id(comment_id, fetch_children=False)
+
+        if not comment:
+            raise ObjectNotFound
+
+        try:
+            await CommentsDAO.update_comment(comment, comment_data.body)
+        except (ValueError, DocumentNotFound):
+            raise ObjectNotFound
+
+    @classmethod
+    async def delete_comment(cls, comment_id: PydanticObjectId) -> None:  # TODO add cascade deletion
+        comment = await CommentsDAO.get_comment_by_id(comment_id, fetch_children=True)
+        await CommentsDAO.delete_comment(comment)

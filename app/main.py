@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.comments.router import router as comments_router
+from app.comments.router import comments_router, notes_comments_router
 from contextlib import asynccontextmanager
 from app.db.mongo import init_mongo
 from app.exceptions.handlers import register_exception_handlers
@@ -35,6 +35,7 @@ register_exception_handlers(app_v1)
 
 
 app_v1.include_router(comments_router)
+app_v1.include_router(notes_comments_router)
 app.mount("/v1", app_v1)
 
 

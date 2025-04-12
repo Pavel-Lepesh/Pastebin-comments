@@ -38,3 +38,12 @@ class CommentsDAO:
             limit=limit
         ).to_list()
         return comments
+
+    @classmethod
+    async def update_comment(cls, comment: Comment, body: str) -> None:
+        comment.body = body
+        await comment.replace()
+
+    @classmethod
+    async def delete_comment(cls, comment: Comment) -> None:
+        await comment.delete()
