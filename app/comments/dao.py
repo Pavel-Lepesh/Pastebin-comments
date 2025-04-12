@@ -1,3 +1,5 @@
+from typing import List
+
 from beanie import PydanticObjectId
 from app.exceptions.exceptions import ParentCommentNotFoundError
 
@@ -19,19 +21,19 @@ class CommentsDAO:
         return comment
 
     @classmethod
-    async def update_parent_comment(cls, parent_comment: Comment, children_comment: Comment):
+    async def update_parent_comment(cls, parent_comment: Comment, children_comment: Comment) -> None:
         parent_comment.children.append(children_comment)
         await parent_comment.replace()
 
     @classmethod
-    async def get_comment_by_id(cls, comment_id, fetch_children=False) -> Comment:
-        result = await Comment.get(document_id=comment_id, fetch_links=fetch_children)
-        return result
+    async def get_comment_by_id(cls, comment_id: PydanticObjectId, fetch_children: bool) -> Comment:
+        comment = await Comment.get(document_id=comment_id, fetch_links=fetch_children)
+        return comment
 
     @classmethod
-    async def get_comments_by_hash_link(cls, note_hash_link: str, limit: int = 100):
+    async def get_comments_by_hash_link(cls, note_hash_link: str, limit: int) -> List[Comment]:
         comments = await Comment.find(
-            {"note_hash_link": note_hash_link, "parent_id": None},
+            {"note_hash_link": note_hash_link, "parent_id": None},  # parent_id = None to prevent duplication among children comments
             fetch_links=True,
             limit=limit
         ).to_list()

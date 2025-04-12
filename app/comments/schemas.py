@@ -1,6 +1,8 @@
+from datetime import datetime
+
 from pydantic import BaseModel, Field
 from beanie import PydanticObjectId
-from typing import Optional
+from typing import Optional, List
 
 
 class CommentScheme(BaseModel):
@@ -11,3 +13,10 @@ class CommentScheme(BaseModel):
 class CommentInsertScheme(CommentScheme):
     note_hash_link: str
     user_id: int
+
+
+class CommentResponseScheme(BaseModel):
+    user_id: int
+    body: str
+    created: datetime
+    children: List['CommentResponseScheme'] | None = None
