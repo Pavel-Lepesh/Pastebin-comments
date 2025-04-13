@@ -79,6 +79,21 @@ class CommentService:
             raise ObjectNotFound
 
     @classmethod
-    async def delete_comment(cls, comment_id: PydanticObjectId) -> None:  # TODO add cascade deletion
+    async def delete_comment(cls, comment_id: PydanticObjectId) -> None:
+        """Uses recursion to collect all ids and then delete them in one iteration"""
         comment = await CommentsDAO.get_comment_by_id(comment_id, fetch_children=True)
-        await CommentsDAO.delete_comment(comment)
+        ids: List[PydanticObjectId] = []
+
+        def recursion_deletion(comment: Comment):
+            nonlocal ids
+
+            for child in comment.children:
+                recursion_deletion(child)
+
+                ids.append(child.id)
+
+        recursion_deletion(comment)
+
+        ids.append(comment.id)
+
+        await CommentsDAO.delete_comments(ids)

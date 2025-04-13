@@ -6,6 +6,7 @@ from app.exceptions.exceptions import ParentCommentNotFoundError
 from app.comments.models import Comment
 from app.comments.schemas import CommentScheme, CommentInsertScheme
 from loguru import logger
+from beanie.operators import In
 
 
 class CommentsDAO:
@@ -45,5 +46,5 @@ class CommentsDAO:
         await comment.replace()
 
     @classmethod
-    async def delete_comment(cls, comment: Comment) -> None:
-        await comment.delete()
+    async def delete_comments(cls, comments: List[PydanticObjectId]) -> None:
+        await Comment.find(In(Comment.id, comments)).delete()
