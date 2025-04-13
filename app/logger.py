@@ -36,7 +36,6 @@ def setup_logger():
         sys.stdout,
         level="DEBUG",
         colorize=True,
-        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan> - <level>{message}</level>",
         backtrace=True,
         diagnose=True
     )

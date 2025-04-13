@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
-from app.exceptions.exceptions import ParentCommentNotFoundError
+from app.exceptions.exceptions import ParentCommentNotFoundError, ParentConflict, ObjectNotFound
 from loguru import logger
 
 
@@ -8,8 +8,22 @@ def register_exception_handlers(app: FastAPI):
     @app.exception_handler(ParentCommentNotFoundError)
     async def parent_comment_not_found_handler(request: Request, exc: ParentCommentNotFoundError):
         return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"detail": str(exc)}
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"detail": "Parent comment wasn't found"}
+        )
+
+    @app.exception_handler(ParentConflict)
+    async def parent_conflict(request: Request, exc: ParentConflict):
+        return JSONResponse(
+            status_code=status.HTTP_409_CONFLICT,
+            content={"detail": "Invalid hash link. There is no such a parent with the link"}
+        )
+
+    @app.exception_handler(ObjectNotFound)
+    async def object_not_found(request: Request, exc: ObjectNotFound):
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"detail": "Searching object not found"}
         )
 
     @app.exception_handler(Exception)
