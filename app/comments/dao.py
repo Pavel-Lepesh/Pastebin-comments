@@ -32,10 +32,11 @@ class CommentsDAO:
         return comment
 
     @classmethod
-    async def get_comments_by_hash_link(cls, note_hash_link: str, limit: int) -> List[Comment]:
+    async def get_comments_by_hash_link(cls, note_hash_link: str, skip: int, limit: int) -> List[Comment]:
         comments = await Comment.find(
             {"note_hash_link": note_hash_link, "parent_id": None},  # parent_id = None to prevent duplication among children comments
             fetch_links=True,
+            skip=skip,
             limit=limit
         ).to_list()
         return comments
