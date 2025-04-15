@@ -18,7 +18,8 @@ class CommentService:
             note_hash_link: str
     ) -> Comment:
         """Comment creation with checking if a parent comment exists"""
-        parent_comment = await CommentsDAO.get_comment_by_id(comment_data.parent_id, False) if comment_data.parent_id else None
+        parent_comment = await CommentsDAO.get_comment_by_id(comment_data.parent_id,
+                                                             False) if comment_data.parent_id else None
 
         if comment_data.parent_id and not parent_comment:
             logger.error("Parent comment wasn't found")
@@ -36,7 +37,8 @@ class CommentService:
 
         if parent_comment:
             if parent_comment.note_hash_link != new_comment.note_hash_link:
-                logger.error(f"Parent hash link does not match children hash link (Parent:{parent_comment.id}, Child: {new_comment.id})")
+                logger.error(
+                    f"Parent hash link does not match children hash link (Parent:{parent_comment.id}, Child: {new_comment.id})")
                 raise ParentConflict
             try:
                 await CommentsDAO.update_parent_comment(parent_comment, new_comment)
@@ -48,8 +50,9 @@ class CommentService:
         return new_comment
 
     @classmethod
-    async def get_note_all_comments(cls, note_hash_link: str, limit: int) -> List[Comment]:
-        comments = await CommentsDAO.get_comments_by_hash_link(note_hash_link, limit)
+    async def get_note_all_comments(cls, note_hash_link: str, page: int,  limit: int) -> List[Comment]:
+        skip = (page - 1) * limit
+        comments = await CommentsDAO.get_comments_by_hash_link(note_hash_link, skip, limit)
 
         if not comments:
             raise ObjectNotFound

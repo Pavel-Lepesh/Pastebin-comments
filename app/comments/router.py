@@ -29,8 +29,9 @@ async def create_comment(
 
 @notes_comments_router.get("/", status_code=200, summary="Fetch all the note comments")
 async def get_all_note_comments(note_hash_link: str,
-                                limit: Annotated[int, Query(le=100)] = 100) -> List[CommentResponseScheme]:
-    comments = await CommentService.get_note_all_comments(note_hash_link, limit)
+                                page: Annotated[int, Query(gt=0)] = 1,
+                                limit: Annotated[int, Query(gt=0, le=100)] = 10) -> List[CommentResponseScheme]:
+    comments = await CommentService.get_note_all_comments(note_hash_link, page, limit)
     return comments
 
 
@@ -41,7 +42,7 @@ async def get_comment_by_id(comment_id: PydanticObjectId,
     return comment
 
 
-@comments_router.patch("/{comment_id}",status_code=204, summary="Update a comment")
+@comments_router.patch("/{comment_id}", status_code=204, summary="Update a comment")
 async def update_comment(comment_id: PydanticObjectId, comment_data: CommentUpdateScheme) -> None:
     await CommentService.update_comment(comment_id, comment_data)
 

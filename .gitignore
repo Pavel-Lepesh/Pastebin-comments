@@ -2,9 +2,11 @@
 /.idea/
 /.venv
 /.env
+/.env.test
 __pycache__/
 **/__pycache__/
 *.py[cod]
 /mongo_example.py
 /test.py
 /logs
+/tests/logs
