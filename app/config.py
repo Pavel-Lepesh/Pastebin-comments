@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     MONGODB_PORT: int
     MONGODB_DB_NAME: str
 
+    APP_HOST: str
+    APP_PORT: int
+    EXTERNAL_APP_PORT: int
+
     model_config = SettingsConfigDict(env_file=env_file)
 
 

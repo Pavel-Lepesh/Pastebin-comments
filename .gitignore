@@ -3,6 +3,7 @@
 /.venv
 /.env
 /.env.test
+/.env.dev
 __pycache__/
 **/__pycache__/
 *.py[cod]

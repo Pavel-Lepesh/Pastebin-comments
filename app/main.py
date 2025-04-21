@@ -7,6 +7,7 @@ from app.logger import setup_logger
 from app.logger_intercept import InterceptHandler
 from app.middleware.middleware import AuthMiddleware
 import logging
+from app.config import settings
 
 
 def configure_logging():
@@ -41,4 +42,11 @@ app.mount("/v1", app_v1)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", reload=True, log_config=None, use_colors=True)
+    uvicorn.run(
+        "app.main:app",
+        host=settings.APP_HOST,
+        port=settings.APP_PORT,
+        reload=False,
+        log_config=None,
+        use_colors=True
+    )
