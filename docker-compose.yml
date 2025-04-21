@@ -1,20 +1,38 @@
 services:
+  pastebin_nginx:
+    container_name: nginx_comments
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    depends_on:
+      - comments_service
+    networks:
+      - comments_net
   comments_service:
     container_name: comments
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "${EXTERNAL_APP_PORT}:8000"
+      - "9090:9090"
     env_file:
       - .env.dev
     depends_on:
       - mongo
+    networks:
+      - comments_net
   mongo:
     image: mongo:7.0.3
     container_name: comments_mongo
     volumes:
       - mongo_data:/data/db
+    networks:
+      - comments_net
 
 volumes:
   mongo_data:
+
+networks:
+  comments_net:
