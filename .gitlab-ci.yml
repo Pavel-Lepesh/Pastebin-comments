@@ -15,4 +15,10 @@ build-job:
 deploy-job:
   stage: deploy
   script:
+    - echo "MONGODB_HOST=mongo" >> .env.dev
+    - echo "MONGODB_PORT=27017" >> .env.dev
+    - echo "MONGODB_DB_NAME=pastebin_comments_db" >> .env.dev
+    - echo "APP_HOST=0.0.0.0" >> .env.dev
+    - echo "APP_PORT=9090" >> .env.dev
+    - echo "EXTERNAL_APP_PORT=9090" >> .env.dev
     - docker compose up -d
