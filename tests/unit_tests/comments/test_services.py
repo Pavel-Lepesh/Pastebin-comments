@@ -2,15 +2,20 @@ import pytest
 from bson import ObjectId
 
 from app.comments.dao import CommentsDAO
+from app.comments.schemas import CommentUpdateScheme
 from app.comments.services import CommentService
 from app.exceptions.exceptions import ObjectNotFound
 
 
 class TestServices:
-    MOCK_COMMENTS = [{"id": f"67fb6ba0539e68884a03a03{i}",
-                      "note_hash_link": "some_hash",
-                      "user_id": 1,
-                      "body": "string"} for i in range(1, 11)]
+    MOCK_COMMENTS = [
+        {
+            "id": f"67fb6ba0539e68884a03a03{i}",
+            "note_hash_link": "some_hash",
+            "user_id": 1,
+            "body": "string"
+        } for i in range(1, 11)
+    ]
     MOCK_COMMENT_WITH_CHILD = {
         "id": ObjectId("67fb6ba0539e68884a03a031"),
         "note_hash_link": "some_hash",
@@ -96,3 +101,37 @@ class TestServices:
         else:
             with pytest.raises(ObjectNotFound):
                 await CommentService.get_comment_by_id(mock_comment_id, mock_children)
+
+    @pytest.mark.parametrize(
+        "mock_comment_id, success",
+        [
+            (ObjectId("67fb6ba0539e68884a03a031"), True),
+            (ObjectId("67fb6ba0539e68884a03a042"), False),
+        ]
+    )
+    async def test_update_comment(
+            self,
+            mock_comment_id,
+            success,
+            monkeypatch
+    ):
+        async def mock_get_comment_by_id(comment_id, fetch_children=True):
+            if self.MOCK_COMMENT_WITH_CHILD["id"] == comment_id:
+                return self.MOCK_COMMENT_WITH_CHILD
+            else:
+                return []
+
+        async def mock_update_comment(comment, body):
+            return None
+
+        monkeypatch.setattr(CommentsDAO, "get_comment_by_id", mock_get_comment_by_id, raising=True)
+        monkeypatch.setattr(CommentsDAO, "update_comment", mock_update_comment, raising=True)
+
+        data = CommentUpdateScheme(body="new body")
+
+        if success:
+            result = await CommentService.update_comment(mock_comment_id, data)
+            assert not result
+        else:
+            with pytest.raises(ObjectNotFound):
+                await CommentService.update_comment(mock_comment_id, data)
