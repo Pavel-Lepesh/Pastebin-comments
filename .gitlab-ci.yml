@@ -11,7 +11,7 @@ build-job:
 unit-test-job:
   stage: test
   script:
-    - pytest -v
+    - docker exec comments pytest -v
 
 deploy-job:
   stage: deploy
