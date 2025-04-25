@@ -85,6 +85,10 @@ class CommentService:
     async def delete_comment(cls, comment_id: PydanticObjectId) -> None:
         """Uses recursion to collect all ids and then delete them in one iteration"""
         comment = await CommentsDAO.get_comment_by_id(comment_id, fetch_children=True)
+
+        if not comment:
+            raise ObjectNotFound
+
         ids: List[PydanticObjectId] = []
 
         def recursion_deletion(comment: Comment):

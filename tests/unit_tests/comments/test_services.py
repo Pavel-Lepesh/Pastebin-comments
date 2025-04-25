@@ -30,7 +30,16 @@ class TestServices:
                 "user_id": 1,
                 "created": "2025-04-13T07:45:36.090+00:00",
                 "body": "string",
-                "children": []
+                "children": [
+                    CommentResponseScheme(**{
+                        "id": ObjectId("67fb6ba0539e68884a03a033"),
+                        "note_hash_link": "some_hash",
+                        "user_id": 1,
+                        "created": "2025-04-13T07:45:36.090+00:00",
+                        "body": "string",
+                        "children": []
+                    })
+                ]
             })
         ]
     })
@@ -178,3 +187,29 @@ class TestServices:
         else:
             with pytest.raises(ObjectNotFound):
                 await CommentService.update_comment(mock_comment_id, data)
+
+    @pytest.mark.parametrize(
+        "mock_comment_id, success",
+        [
+            (ObjectId("67fb6ba0539e68884a03a031"), True),
+            (ObjectId("67fb6ba0539e68884a03a033"), False)
+        ]
+    )
+    async def test_delete_comment(
+            self,
+            mock_comment_id,
+            success,
+            monkeypatch
+    ):
+        async def mock_delete_comments(ids):
+            assert len(ids) == 3  # the length of MOCK_COMMENT_WITH_CHILD
+            return None
+
+        monkeypatch.setattr(CommentsDAO, "get_comment_by_id", self.mock_get_comment_by_id, raising=True)
+        monkeypatch.setattr(CommentsDAO, "delete_comments", mock_delete_comments, raising=True)
+
+        if success:
+            await CommentService.delete_comment(mock_comment_id)
+        else:
+            with pytest.raises(ObjectNotFound):
+                await CommentService.delete_comment(mock_comment_id)
