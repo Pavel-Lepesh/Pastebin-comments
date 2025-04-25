@@ -36,6 +36,7 @@ class TestAPI:
                     "id": "67fb6ba0539e68884a03a032",
                     "user_id": 1,
                     "body": "Mocked comment",
+                    "note_hash_link": "some_hash",
                     "created": "2025-04-13T07:45:36.090+00:00",
                     "children": []
                 }
@@ -82,6 +83,7 @@ class TestAPI:
                 "id": ObjectId("67fb6ba0539e68884a03a031"),
                 "user_id": 1,
                 "body": "string",
+                "note_hash_link": "some_hash",
                 "created": "2025-04-13T07:45:36.090000",
                 "children": []
             }
@@ -89,6 +91,7 @@ class TestAPI:
                 "id": ObjectId("67fb6ba0539e68884a03a032"),
                 "user_id": 1,
                 "body": "Mocked comment",
+                "note_hash_link": "some_hash",
                 "created": "2025-04-13T07:45:36.090+00:00",
                 "children": []
             }
@@ -137,6 +140,7 @@ class TestAPI:
                 "id": ObjectId("67fb6ba0539e68884a03a032"),
                 "user_id": 1,  # TODO change test after JWT implementation
                 "body": comment_data.body,
+                "note_hash_link": "some_hash",
                 "created": "2025-04-13T07:45:36.090+00:00",
                 "children": []
             }
