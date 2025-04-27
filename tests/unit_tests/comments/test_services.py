@@ -1,5 +1,5 @@
 import pytest
-from bson import ObjectId
+from beanie import PydanticObjectId
 
 from app.comments.dao import CommentsDAO
 from app.comments.schemas import CommentUpdateScheme, CommentScheme, CommentResponseScheme
@@ -18,21 +18,21 @@ class TestServices:
         }) for i in range(1, 10)
     ]
     MOCK_COMMENT_WITH_CHILD = CommentResponseScheme(**{
-        "id": ObjectId("67fb6ba0539e68884a03a031"),
+        "id": PydanticObjectId("67fb6ba0539e68884a03a031"),
         "note_hash_link": "some_hash",
         "user_id": 1,
         "created": "2025-04-13T07:45:36.090+00:00",
         "body": "string",
         "children": [
             CommentResponseScheme(**{
-                "id": ObjectId("67fb6ba0539e68884a03a032"),
+                "id": PydanticObjectId("67fb6ba0539e68884a03a032"),
                 "note_hash_link": "some_hash",
                 "user_id": 1,
                 "created": "2025-04-13T07:45:36.090+00:00",
                 "body": "string",
                 "children": [
                     CommentResponseScheme(**{
-                        "id": ObjectId("67fb6ba0539e68884a03a033"),
+                        "id": PydanticObjectId("67fb6ba0539e68884a03a033"),
                         "note_hash_link": "some_hash",
                         "user_id": 1,
                         "created": "2025-04-13T07:45:36.090+00:00",
@@ -54,9 +54,9 @@ class TestServices:
         "mock_comment_data, mock_user_id, mock_hash_link, success, exc",
         [
             (CommentScheme(body="string"), 1, "some_hash", True, None),
-            (CommentScheme(body="string", parent_id=ObjectId("67fb6ba0539e68884a03a031")), 1, "some_hash", True, None),
-            (CommentScheme(body="string", parent_id=ObjectId("67fb6ba0539e68884a03a042")), 1, "some_hash", False, ParentCommentNotFoundError),
-            (CommentScheme(body="string", parent_id=ObjectId("67fb6ba0539e68884a03a031")), 1, "unexpected_hash", False, ParentConflict)
+            (CommentScheme(body="string", parent_id=PydanticObjectId("67fb6ba0539e68884a03a031")), 1, "some_hash", True, None),
+            (CommentScheme(body="string", parent_id=PydanticObjectId("67fb6ba0539e68884a03a042")), 1, "some_hash", False, ParentCommentNotFoundError),
+            (CommentScheme(body="string", parent_id=PydanticObjectId("67fb6ba0539e68884a03a031")), 1, "unexpected_hash", False, ParentConflict)
         ]
     )
     async def test_create_comment(
@@ -69,7 +69,7 @@ class TestServices:
             monkeypatch
     ):
         created_comment = CommentResponseScheme(**{
-            "id": ObjectId("67fb6ba0539e68884a03a034"),
+            "id": PydanticObjectId("67fb6ba0539e68884a03a034"),
             "body": mock_comment_data.body,
             "note_hash_link": mock_hash_link,
             "user_id": mock_user_id,
@@ -137,8 +137,8 @@ class TestServices:
     @pytest.mark.parametrize(
         "mock_comment_id, mock_children, success",
         [
-            (ObjectId("67fb6ba0539e68884a03a031"), True, True),
-            (ObjectId("67fb6ba0539e68884a03a037"), True, False),
+            (PydanticObjectId("67fb6ba0539e68884a03a031"), True, True),
+            (PydanticObjectId("67fb6ba0539e68884a03a037"), True, False),
         ]
     )
     async def test_get_comment_by_id(
@@ -163,8 +163,8 @@ class TestServices:
     @pytest.mark.parametrize(
         "mock_comment_id, success",
         [
-            (ObjectId("67fb6ba0539e68884a03a031"), True),
-            (ObjectId("67fb6ba0539e68884a03a042"), False),
+            (PydanticObjectId("67fb6ba0539e68884a03a031"), True),
+            (PydanticObjectId("67fb6ba0539e68884a03a042"), False),
         ]
     )
     async def test_update_comment(
@@ -191,8 +191,8 @@ class TestServices:
     @pytest.mark.parametrize(
         "mock_comment_id, success",
         [
-            (ObjectId("67fb6ba0539e68884a03a031"), True),
-            (ObjectId("67fb6ba0539e68884a03a033"), False)
+            (PydanticObjectId("67fb6ba0539e68884a03a031"), True),
+            (PydanticObjectId("67fb6ba0539e68884a03a033"), False)
         ]
     )
     async def test_delete_comment(

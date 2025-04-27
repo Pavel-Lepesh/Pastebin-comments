@@ -1,11 +1,9 @@
 from typing import List
 
 from beanie import PydanticObjectId
-from app.exceptions.exceptions import ParentCommentNotFoundError
 
 from app.comments.models import Comment
-from app.comments.schemas import CommentScheme, CommentInsertScheme
-from loguru import logger
+from app.comments.schemas import CommentInsertScheme
 from beanie.operators import In
 
 
@@ -34,7 +32,8 @@ class CommentsDAO:
     @classmethod
     async def get_comments_by_hash_link(cls, note_hash_link: str, skip: int, limit: int) -> List[Comment]:
         comments = await Comment.find(
-            {"note_hash_link": note_hash_link, "parent_id": None},  # parent_id = None to prevent duplication among children comments
+            # parent_id = None to prevent duplication among children comments
+            {"note_hash_link": note_hash_link, "parent_id": None},
             fetch_links=True,
             skip=skip,
             limit=limit
