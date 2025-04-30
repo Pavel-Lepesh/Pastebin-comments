@@ -30,7 +30,7 @@ async def create_comment(
 @notes_comments_router.get("/", status_code=200, summary="Fetch all the note comments")
 async def get_all_note_comments(note_hash_link: str,
                                 page: Annotated[int, Query(gt=0)] = 1,
-                                limit: Annotated[int, Query(gt=0, le=100)] = 10) -> List[CommentResponseScheme]:
+                                limit: Annotated[int, Query(gt=1, le=100)] = 10) -> List[CommentResponseScheme]:
     comments = await CommentService.get_note_all_comments(note_hash_link, page, limit)
     return comments
 

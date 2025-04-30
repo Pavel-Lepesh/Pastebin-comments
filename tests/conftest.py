@@ -1,6 +1,5 @@
 import pytest
 import asyncio
-import pathlib
 import json
 from httpx import AsyncClient, ASGITransport
 from app.main import app_v1
@@ -24,7 +23,7 @@ async def async_client():
         yield client
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="class", autouse=True)
 async def init_db(event_loop):
     # setting the test event loop for mongo initialisation
     asyncio.set_event_loop(event_loop)

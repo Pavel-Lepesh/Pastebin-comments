@@ -12,7 +12,7 @@ mock_comments = """[
   },
   {
     "id": "661eb8d5b4a2f431dcb8f1d2",
-    "note_hash_link": "hash_2",
+    "note_hash_link": "hash_3",
     "user_id": 2,
     "created": "2025-04-28T12:05:00Z",
     "updated": "2025-04-28T12:05:00Z",
