@@ -36,6 +36,7 @@ class TestAPI:
                     "id": "67fb6ba0539e68884a03a032",
                     "user_id": 1,
                     "body": "Mocked comment",
+                    "note_hash_link": "some_hash",
                     "created": "2025-04-13T07:45:36.090+00:00",
                     "children": []
                 }
@@ -82,6 +83,7 @@ class TestAPI:
                 "id": ObjectId("67fb6ba0539e68884a03a031"),
                 "user_id": 1,
                 "body": "string",
+                "note_hash_link": "some_hash",
                 "created": "2025-04-13T07:45:36.090000",
                 "children": []
             }
@@ -89,6 +91,7 @@ class TestAPI:
                 "id": ObjectId("67fb6ba0539e68884a03a032"),
                 "user_id": 1,
                 "body": "Mocked comment",
+                "note_hash_link": "some_hash",
                 "created": "2025-04-13T07:45:36.090+00:00",
                 "children": []
             }
@@ -135,13 +138,15 @@ class TestAPI:
         async def mock_create_comment(comment_data, user_id, note_hash_link):
             result = {
                 "id": ObjectId("67fb6ba0539e68884a03a032"),
-                "user_id": 1,  # TODO change test after JWT implementation
+                "user_id": user_id,
                 "body": comment_data.body,
+                "note_hash_link": "some_hash",
                 "created": "2025-04-13T07:45:36.090+00:00",
                 "children": []
             }
             return result
 
+        monkeypatch.setattr("app.comments.dependencies.get_user_id", lambda: 1)
         monkeypatch.setattr(CommentService, "create_comment", mock_create_comment, raising=True)
 
         response = await async_client.post("/some_hash/comments/", json=payload)
@@ -168,7 +173,7 @@ class TestAPI:
             monkeypatch,
             async_client: AsyncClient
     ):
-        async def mock_update_comment(comment_id, comment_data):
+        async def mock_update_comment(comment_id, comment_data, user_id):
             expected_body = "test body"
             assert expected_body == comment_data.body
 
@@ -191,7 +196,7 @@ class TestAPI:
             monkeypatch,
             async_client: AsyncClient
     ):
-        async def mock_delete_comment(comment_id):
+        async def mock_delete_comment(comment_id, user_id):
             pass
 
         monkeypatch.setattr(CommentService, "delete_comment", mock_delete_comment, raising=True)

@@ -5,7 +5,6 @@ from app.db.mongo import init_mongo
 from app.exceptions.handlers import register_exception_handlers
 from app.logger import setup_logger
 from app.logger_intercept import InterceptHandler
-from app.middleware.middleware import AuthMiddleware
 import logging
 from app.config import settings
 
@@ -22,9 +21,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app_v1 = FastAPI()
-
-
-app.add_middleware(AuthMiddleware)
 
 
 setup_logger()

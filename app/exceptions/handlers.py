@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
-from app.exceptions.exceptions import ParentCommentNotFoundError, ParentConflict, ObjectNotFound
+from app.exceptions.exceptions import ParentCommentNotFoundError, ParentConflict, ObjectNotFound, CredentialsException, \
+    AccessDenied
 from loguru import logger
 
 
@@ -24,6 +25,20 @@ def register_exception_handlers(app: FastAPI):
         return JSONResponse(
             status_code=status.HTTP_404_NOT_FOUND,
             content={"detail": "Searching object not found"}
+        )
+
+    @app.exception_handler(CredentialsException)
+    async def credentials_exception(request: Request, exc: CredentialsException):
+        return JSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={"detail": "Could not validate credentials", "WWW-Authenticate": "Bearer"}
+        )
+
+    @app.exception_handler(AccessDenied)
+    async def access_denied(request: Request, exc: AccessDenied):
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={"detail": "Have no permissions to modify the object"}
         )
 
     @app.exception_handler(Exception)

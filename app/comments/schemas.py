@@ -17,6 +17,7 @@ class CommentInsertScheme(CommentScheme):
 
 class CommentResponseScheme(BaseModel):
     id: PydanticObjectId
+    note_hash_link: str
     user_id: int
     body: str
     created: datetime

@@ -1,6 +1,6 @@
 stages:
   - build
-#  - test
+  - test
   - deploy
 
 build-job:
@@ -8,9 +8,10 @@ build-job:
   script:
     - docker-compose build
 
-#unit-test-job:
-#  stage: test
-#  script:
+unit-test-job:
+  stage: test
+  script:
+    - docker exec comments pytest -v
 
 deploy-job:
   stage: deploy
