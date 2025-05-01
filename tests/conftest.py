@@ -2,10 +2,15 @@ import pytest
 import asyncio
 import json
 from httpx import AsyncClient, ASGITransport
+
+from app.comments.dependencies import get_user_id
 from app.main import app_v1
 from app.db.mongo import init_mongo
 from app.comments.models import Comment
 from tests.mock_comments import mock_comments
+
+
+app_v1.dependency_overrides[get_user_id] = lambda: 1
 
 
 @pytest.fixture(scope="session")

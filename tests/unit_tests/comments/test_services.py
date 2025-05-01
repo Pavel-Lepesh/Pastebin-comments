@@ -161,15 +161,16 @@ class TestServices:
                 await CommentService.get_comment_by_id(mock_comment_id, mock_children)
 
     @pytest.mark.parametrize(
-        "mock_comment_id, success",
+        "mock_comment_id, mock_user_id, success",
         [
-            (PydanticObjectId("67fb6ba0539e68884a03a031"), True),
-            (PydanticObjectId("67fb6ba0539e68884a03a042"), False),
+            (PydanticObjectId("67fb6ba0539e68884a03a031"), 1,  True),
+            (PydanticObjectId("67fb6ba0539e68884a03a042"), 1, False),
         ]
     )
     async def test_update_comment(
             self,
             mock_comment_id,
+            mock_user_id,
             success,
             monkeypatch
     ):
@@ -182,22 +183,23 @@ class TestServices:
         data = CommentUpdateScheme(body="new body")
 
         if success:
-            result = await CommentService.update_comment(mock_comment_id, data)
+            result = await CommentService.update_comment(mock_comment_id, data, mock_user_id)
             assert not result
         else:
             with pytest.raises(ObjectNotFound):
-                await CommentService.update_comment(mock_comment_id, data)
+                await CommentService.update_comment(mock_comment_id, data, mock_user_id)
 
     @pytest.mark.parametrize(
-        "mock_comment_id, success",
+        "mock_comment_id, mock_user_id, success",
         [
-            (PydanticObjectId("67fb6ba0539e68884a03a031"), True),
-            (PydanticObjectId("67fb6ba0539e68884a03a033"), False)
+            (PydanticObjectId("67fb6ba0539e68884a03a031"), 1,  True),
+            (PydanticObjectId("67fb6ba0539e68884a03a033"), 1, False)
         ]
     )
     async def test_delete_comment(
             self,
             mock_comment_id,
+            mock_user_id,
             success,
             monkeypatch
     ):
@@ -209,7 +211,7 @@ class TestServices:
         monkeypatch.setattr(CommentsDAO, "delete_comments", mock_delete_comments, raising=True)
 
         if success:
-            await CommentService.delete_comment(mock_comment_id)
+            await CommentService.delete_comment(mock_comment_id, mock_user_id)
         else:
             with pytest.raises(ObjectNotFound):
-                await CommentService.delete_comment(mock_comment_id)
+                await CommentService.delete_comment(mock_comment_id, mock_user_id)
