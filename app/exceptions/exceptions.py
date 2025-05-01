@@ -8,3 +8,11 @@ class ParentConflict(Exception):
 
 class ObjectNotFound(Exception):
     pass
+
+
+class CredentialsException(Exception):
+    pass
+
+
+class AccessDenied(Exception):
+    pass

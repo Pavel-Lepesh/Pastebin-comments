@@ -22,7 +22,7 @@ comments_router = APIRouter(
 async def create_comment(
         note_hash_link: str,
         comment_data: CommentScheme,
-        user_id: int = Depends(get_user_id)) -> CommentResponseScheme:
+        user_id: Annotated[int, Depends(get_user_id)]) -> CommentResponseScheme:
     comment = await CommentService.create_comment(comment_data, user_id, note_hash_link)
     return comment
 
@@ -43,10 +43,12 @@ async def get_comment_by_id(comment_id: PydanticObjectId,
 
 
 @comments_router.patch("/{comment_id}", status_code=204, summary="Update a comment")
-async def update_comment(comment_id: PydanticObjectId, comment_data: CommentUpdateScheme) -> None:
-    await CommentService.update_comment(comment_id, comment_data)
+async def update_comment(comment_id: PydanticObjectId,
+                         comment_data: CommentUpdateScheme,
+                         user_id: Annotated[int, Depends(get_user_id)]) -> None:
+    await CommentService.update_comment(comment_id, comment_data, user_id)
 
 
 @comments_router.delete("/{comment_id}", status_code=204, summary="Delete a comment")
-async def delete_comment(comment_id: PydanticObjectId) -> None:
-    await CommentService.delete_comment(comment_id)
+async def delete_comment(comment_id: PydanticObjectId, user_id: Annotated[int, Depends(get_user_id)]) -> None:
+    await CommentService.delete_comment(comment_id, user_id)

@@ -3,7 +3,7 @@ from beanie import PydanticObjectId
 from app.comments.dao import CommentsDAO
 from app.comments.schemas import CommentScheme, CommentInsertScheme, CommentUpdateScheme
 from beanie.exceptions import DocumentNotFound
-from app.exceptions.exceptions import ParentCommentNotFoundError, ParentConflict, ObjectNotFound
+from app.exceptions.exceptions import ParentCommentNotFoundError, ParentConflict, ObjectNotFound, AccessDenied
 from loguru import logger
 from app.comments.models import Comment
 from typing import List
@@ -70,11 +70,14 @@ class CommentService:
         return comment
 
     @classmethod
-    async def update_comment(cls, comment_id: PydanticObjectId, comment_data: CommentUpdateScheme) -> None:
+    async def update_comment(cls, comment_id: PydanticObjectId, comment_data: CommentUpdateScheme, user_id: int) -> None:
         comment = await CommentsDAO.get_comment_by_id(comment_id, fetch_children=False)
 
         if not comment:
             raise ObjectNotFound
+
+        if comment.user_id != user_id:
+            raise AccessDenied
 
         try:
             await CommentsDAO.update_comment(comment, comment_data.body)
@@ -82,12 +85,15 @@ class CommentService:
             raise ObjectNotFound
 
     @classmethod
-    async def delete_comment(cls, comment_id: PydanticObjectId) -> None:
+    async def delete_comment(cls, comment_id: PydanticObjectId, user_id: int) -> None:
         """Uses recursion to collect all ids and then delete them in one iteration"""
         comment = await CommentsDAO.get_comment_by_id(comment_id, fetch_children=True)
 
         if not comment:
             raise ObjectNotFound
+
+        if comment.user_id != user_id:
+            raise AccessDenied
 
         ids: List[PydanticObjectId] = []
 
