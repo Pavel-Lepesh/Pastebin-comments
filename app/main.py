@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status
+from fastapi.responses import JSONResponse
 from app.comments.router import comments_router, notes_comments_router
 from contextlib import asynccontextmanager
 from app.db.mongo import init_mongo
@@ -21,6 +22,14 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app_v1 = FastAPI()
+
+
+@app.get("/health", status_code=status.HTTP_200_OK)
+async def health_check():
+    return JSONResponse(
+        content={"status": "OK", "message": "Service is healthy"},
+        status_code=status.HTTP_200_OK,
+    )
 
 
 setup_logger()
