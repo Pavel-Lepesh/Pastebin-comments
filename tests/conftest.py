@@ -10,6 +10,7 @@ from app.comments.models import Comment
 from tests.mock_comments import mock_comments
 
 
+# turn off JWT authentication and set a default user_id = 1
 app_v1.dependency_overrides[get_user_id] = lambda: 1
 
 
