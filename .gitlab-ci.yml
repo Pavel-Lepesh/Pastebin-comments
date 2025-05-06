@@ -18,9 +18,6 @@ deploy-job:
     - echo "APP_PORT=9090" >> .env.dev
     - echo "EXTERNAL_APP_PORT=9090" >> .env.dev
 
-    - echo "JWT_ACCESS_SECRET_KEY=09d25e093faa6ca2556c818166b7a9563b93f7089f6f0f4caa6cf63b88e8d3e7" >> .env.dev
-    - echo "JWT_REFRESH_SECRET_KEY=09d25e093faa6ca2556c81w166b7a9563b93f7089f6f0f4caa6cf63b89e8d3e7" >> .env.dev
-    - echo "JWT_ALGORITHM=HS256" >> .env.dev
     - docker compose up -d
 
 test-job:
