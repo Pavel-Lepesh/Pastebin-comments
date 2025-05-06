@@ -1,6 +1,7 @@
 import pytest
-from app.comments.dao import CommentsDAO
 from beanie import PydanticObjectId
+
+from app.comments.dao import CommentsDAO
 from app.comments.schemas import CommentInsertScheme
 
 

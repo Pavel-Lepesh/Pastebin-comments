@@ -1,10 +1,10 @@
 from typing import List
 
 from beanie import PydanticObjectId
+from beanie.operators import In
 
 from app.comments.models import Comment
 from app.comments.schemas import CommentInsertScheme
-from beanie.operators import In
 
 
 class CommentsDAO:

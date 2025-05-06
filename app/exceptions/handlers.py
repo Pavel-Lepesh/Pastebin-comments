@@ -1,13 +1,14 @@
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
+from loguru import logger
+
 from app.exceptions.exceptions import (
+    AccessDenied,
+    CredentialsException,
+    ObjectNotFound,
     ParentCommentNotFoundError,
     ParentConflict,
-    ObjectNotFound,
-    CredentialsException,
-    AccessDenied,
 )
-from loguru import logger
 
 
 def register_exception_handlers(app: FastAPI):

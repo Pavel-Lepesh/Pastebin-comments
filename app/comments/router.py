@@ -1,14 +1,15 @@
+from typing import Annotated, List
+
 from beanie import PydanticObjectId
 from fastapi import APIRouter, Depends, Query
-from typing import Annotated, List
+
+from app.comments.dependencies import get_user_id
 from app.comments.schemas import (
-    CommentScheme,
     CommentResponseScheme,
+    CommentScheme,
     CommentUpdateScheme,
 )
 from app.comments.services import CommentService
-from app.comments.dependencies import get_user_id
-
 
 notes_comments_router = APIRouter(
     prefix="/{note_hash_link}/comments", tags=["Comments"]

@@ -1,14 +1,14 @@
-import pytest
 import asyncio
 import json
-from httpx import AsyncClient, ASGITransport
+
+import pytest
+from httpx import ASGITransport, AsyncClient
 
 from app.comments.dependencies import get_user_id
-from app.main import app_v1
-from app.db.mongo import init_mongo
 from app.comments.models import Comment
+from app.db.mongo import init_mongo
+from app.main import app_v1
 from tests.mock_comments import mock_comments
-
 
 # turn off JWT authentication and set a default user_id = 1
 app_v1.dependency_overrides[get_user_id] = lambda: 1

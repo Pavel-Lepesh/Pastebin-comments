@@ -1,17 +1,18 @@
+from typing import List
+
 from beanie import PydanticObjectId
+from beanie.exceptions import DocumentNotFound
+from loguru import logger
 
 from app.comments.dao import CommentsDAO
-from app.comments.schemas import CommentScheme, CommentInsertScheme, CommentUpdateScheme
-from beanie.exceptions import DocumentNotFound
+from app.comments.models import Comment
+from app.comments.schemas import CommentInsertScheme, CommentScheme, CommentUpdateScheme
 from app.exceptions.exceptions import (
+    AccessDenied,
+    ObjectNotFound,
     ParentCommentNotFoundError,
     ParentConflict,
-    ObjectNotFound,
-    AccessDenied,
 )
-from loguru import logger
-from app.comments.models import Comment
-from typing import List
 
 
 class CommentService:

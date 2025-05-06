@@ -3,9 +3,9 @@ from beanie import PydanticObjectId
 
 from app.comments.dao import CommentsDAO
 from app.comments.schemas import (
-    CommentUpdateScheme,
-    CommentScheme,
     CommentResponseScheme,
+    CommentScheme,
+    CommentUpdateScheme,
 )
 from app.comments.services import CommentService
 from app.exceptions.exceptions import (

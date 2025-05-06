@@ -1,13 +1,15 @@
+import logging
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
+
 from app.comments.router import comments_router, notes_comments_router
-from contextlib import asynccontextmanager
+from app.config import settings
 from app.db.mongo import init_mongo
 from app.exceptions.handlers import register_exception_handlers
 from app.logger import setup_logger
 from app.logger_intercept import InterceptHandler
-import logging
-from app.config import settings
 
 
 def configure_logging():

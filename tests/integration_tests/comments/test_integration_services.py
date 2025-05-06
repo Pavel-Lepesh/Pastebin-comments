@@ -1,13 +1,13 @@
 import pytest
 from beanie import PydanticObjectId
 
+from app.comments.schemas import CommentScheme, CommentUpdateScheme
 from app.comments.services import CommentService
 from app.exceptions.exceptions import (
     ObjectNotFound,
-    ParentConflict,
     ParentCommentNotFoundError,
+    ParentConflict,
 )
-from app.comments.schemas import CommentScheme, CommentUpdateScheme
 
 
 class TestIntegrationServices:

@@ -1,8 +1,9 @@
-from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
+from loguru import logger
+from motor.motor_asyncio import AsyncIOMotorClient
+
 from app.comments.models import Comment
 from app.config import settings
-from loguru import logger
 
 
 async def init_mongo():

@@ -2,12 +2,12 @@ from typing import Annotated
 
 import jwt
 from fastapi import Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from app.exceptions.exceptions import CredentialsException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import InvalidTokenError
-from app.config import settings
 from loguru import logger
 
+from app.config import settings
+from app.exceptions.exceptions import CredentialsException
 
 auth_scheme = HTTPBearer()
 
