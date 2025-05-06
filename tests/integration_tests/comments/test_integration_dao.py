@@ -1,15 +1,13 @@
 import pytest
-from app.comments.dao import CommentsDAO
 from beanie import PydanticObjectId
+
+from app.comments.dao import CommentsDAO
 from app.comments.schemas import CommentInsertScheme
 
 
 class TestIntegrationDAO:
     INSERT_DATA = CommentInsertScheme(
-        note_hash_link="hash_3",
-        user_id=1,
-        body="test body",
-        parent_id=None
+        note_hash_link="hash_3", user_id=1, body="test body", parent_id=None
     )
 
     async def test_insert_comment(self):
@@ -26,17 +24,10 @@ class TestIntegrationDAO:
             (PydanticObjectId("661eb8d5b4a2f431dcb8f1d1"), True),
             (PydanticObjectId("661eb8d5b4a2f431dcb8f1d1"), True),
             (PydanticObjectId("661eb8d5b4a2f431dcb8f110"), False),
-        ]
+        ],
     )
-    async def test_get_comment_by_id(
-            self,
-            comment_id,
-            success
-    ):
-        comment = await CommentsDAO.get_comment_by_id(
-            comment_id,
-            fetch_children=True
-        )
+    async def test_get_comment_by_id(self, comment_id, success):
+        comment = await CommentsDAO.get_comment_by_id(comment_id, fetch_children=True)
 
         if success:
             assert comment
@@ -52,21 +43,13 @@ class TestIntegrationDAO:
             ("hash_3", 0, 10, 3, True),
             ("hash_3", 0, 1, 1, True),
             ("unexpected", 0, 1, 1, False),
-
-        ]
+        ],
     )
     async def test_get_comment_by_hash_link(
-            self,
-            mock_hash_link,
-            mock_skip,
-            mock_limit,
-            count,
-            success
+        self, mock_hash_link, mock_skip, mock_limit, count, success
     ):
         comments = await CommentsDAO.get_comments_by_hash_link(
-            mock_hash_link,
-            mock_skip,
-            mock_limit
+            mock_hash_link, mock_skip, mock_limit
         )
 
         if success:
@@ -79,8 +62,7 @@ class TestIntegrationDAO:
 
     async def test_update_comment(self):
         original_comment = await CommentsDAO.get_comment_by_id(
-            PydanticObjectId("661eb8d5b4a2f431dcb8f1d2"),
-            False
+            PydanticObjectId("661eb8d5b4a2f431dcb8f1d2"), False
         )
         assert original_comment
 
@@ -88,8 +70,7 @@ class TestIntegrationDAO:
         assert original_comment.body == "new_body"
 
         updated_comment = await CommentsDAO.get_comment_by_id(
-            PydanticObjectId("661eb8d5b4a2f431dcb8f1d2"),
-            False
+            PydanticObjectId("661eb8d5b4a2f431dcb8f1d2"), False
         )
         assert updated_comment
         assert updated_comment.body == "new_body"
@@ -99,16 +80,14 @@ class TestIntegrationDAO:
         assert new_comment
 
         parent_comment = await CommentsDAO.get_comment_by_id(
-            PydanticObjectId("661eb8d5b4a2f431dcb8f1d2"),
-            False
+            PydanticObjectId("661eb8d5b4a2f431dcb8f1d2"), False
         )
         assert parent_comment
 
         await CommentsDAO.update_parent_comment(parent_comment, new_comment)
 
         updated_parent_comment = await CommentsDAO.get_comment_by_id(
-            PydanticObjectId("661eb8d5b4a2f431dcb8f1d2"),
-            False
+            PydanticObjectId("661eb8d5b4a2f431dcb8f1d2"), False
         )
         assert updated_parent_comment
         assert len(updated_parent_comment.children) == 1
@@ -117,15 +96,17 @@ class TestIntegrationDAO:
         "comments_list",
         [
             [PydanticObjectId("661eb8d5b4a2f431dcb8f1d5")],
-            [PydanticObjectId("661eb8d5b4a2f431dcb8f1d3"), PydanticObjectId("661eb8d5b4a2f431dcb8f1d2")]
-        ]
+            [
+                PydanticObjectId("661eb8d5b4a2f431dcb8f1d3"),
+                PydanticObjectId("661eb8d5b4a2f431dcb8f1d2"),
+            ],
+        ],
     )
-    async def test_delete_comments(
-            self,
-            comments_list
-    ):
+    async def test_delete_comments(self, comments_list):
         await CommentsDAO.delete_comments(comments_list)
 
-        comments = [await CommentsDAO.get_comment_by_id(id_, False) for id_ in comments_list]
+        comments = [
+            await CommentsDAO.get_comment_by_id(id_, False) for id_ in comments_list
+        ]
 
         assert not all(comments)

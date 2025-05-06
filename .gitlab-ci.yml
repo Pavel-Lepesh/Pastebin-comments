@@ -1,17 +1,12 @@
 stages:
   - build
-  - test
   - deploy
+  - test
 
 build-job:
   stage: build
   script:
     - docker-compose build
-
-unit-test-job:
-  stage: test
-  script:
-    - docker exec comments pytest -v
 
 deploy-job:
   stage: deploy
@@ -22,4 +17,10 @@ deploy-job:
     - echo "APP_HOST=0.0.0.0" >> .env.dev
     - echo "APP_PORT=9090" >> .env.dev
     - echo "EXTERNAL_APP_PORT=9090" >> .env.dev
+
     - docker compose up -d
+
+test-job:
+  stage: test
+  script:
+    - docker exec comments pytest -v

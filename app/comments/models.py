@@ -1,7 +1,8 @@
-from beanie import Document, Indexed, Link, PydanticObjectId
 from datetime import datetime, timezone
+from typing import List, Optional
+
+from beanie import Document, Indexed, Link, PydanticObjectId
 from pydantic import Field
-from typing import Optional, List
 from tzlocal import get_localzone
 
 

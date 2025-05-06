@@ -1,7 +1,7 @@
-from loguru import logger
 import sys
 from pathlib import Path
 
+from loguru import logger
 
 LOGS_DIR = Path("logs")
 LOGS_DIR.mkdir(exist_ok=True)
@@ -18,7 +18,7 @@ def setup_logger():
         compression="zip",
         enqueue=True,
         backtrace=True,
-        diagnose=True
+        diagnose=True,
     )
 
     logger.add(
@@ -29,13 +29,7 @@ def setup_logger():
         compression="zip",
         enqueue=True,
         backtrace=True,
-        diagnose=True
+        diagnose=True,
     )
 
-    logger.add(
-        sys.stdout,
-        level="DEBUG",
-        colorize=True,
-        backtrace=True,
-        diagnose=True
-    )
+    logger.add(sys.stdout, level="DEBUG", colorize=True, backtrace=True, diagnose=True)

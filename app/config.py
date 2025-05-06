@@ -1,14 +1,12 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
 import os
-from dotenv import load_dotenv
 
+from dotenv import load_dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 load_dotenv()
 
 
-env_file = (
-    ".env.test" if os.getenv("PYTEST_CURRENT_TEST") else ".env"
-)
+env_file = ".env.test" if os.getenv("PYTEST_CURRENT_TEST") else ".env"
 
 
 class Settings(BaseSettings):
