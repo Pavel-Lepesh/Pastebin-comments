@@ -4,6 +4,7 @@ from loguru import logger
 
 class InterceptHandler(logging.Handler):
     """Links uvicorn logs with loguru"""
+
     def emit(self, record):
         try:
             level = logger.level(record.levelname).name

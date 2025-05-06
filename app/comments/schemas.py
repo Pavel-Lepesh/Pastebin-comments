@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 from beanie import PydanticObjectId
-from typing import Optional, List, Any
+from typing import Optional, List
 
 
 class CommentScheme(BaseModel):
@@ -21,7 +21,7 @@ class CommentResponseScheme(BaseModel):
     user_id: int
     body: str
     created: datetime
-    children: List['CommentResponseScheme'] = None
+    children: List["CommentResponseScheme"] = None
 
 
 class CommentUpdateScheme(BaseModel):

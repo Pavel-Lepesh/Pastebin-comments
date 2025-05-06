@@ -6,9 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-env_file = (
-    ".env.test" if os.getenv("PYTEST_CURRENT_TEST") else ".env"
-)
+env_file = ".env.test" if os.getenv("PYTEST_CURRENT_TEST") else ".env"
 
 
 class Settings(BaseSettings):

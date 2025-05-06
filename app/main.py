@@ -47,11 +47,12 @@ app.mount("/v1", app_v1)
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
         "app.main:app",
         host=settings.APP_HOST,
         port=settings.APP_PORT,
         reload=False,
         log_config=None,
-        use_colors=True
+        use_colors=True,
     )

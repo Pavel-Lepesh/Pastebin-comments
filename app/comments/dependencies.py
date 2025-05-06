@@ -12,10 +12,16 @@ from loguru import logger
 auth_scheme = HTTPBearer()
 
 
-async def get_user_id(token: Annotated[HTTPAuthorizationCredentials, Depends(auth_scheme)]):
+async def get_user_id(
+    token: Annotated[HTTPAuthorizationCredentials, Depends(auth_scheme)],
+):
     try:
         token_without_bearer = token.credentials.split()[1]
-        payload = jwt.decode(token_without_bearer, settings.JWT_ACCESS_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
+        payload = jwt.decode(
+            token_without_bearer,
+            settings.JWT_ACCESS_SECRET_KEY,
+            algorithms=[settings.JWT_ALGORITHM],
+        )
         user_id = payload.get("user_id")
 
         if user_id is None:

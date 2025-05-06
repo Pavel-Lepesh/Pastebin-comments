@@ -18,7 +18,7 @@ def setup_logger():
         compression="zip",
         enqueue=True,
         backtrace=True,
-        diagnose=True
+        diagnose=True,
     )
 
     logger.add(
@@ -29,13 +29,7 @@ def setup_logger():
         compression="zip",
         enqueue=True,
         backtrace=True,
-        diagnose=True
+        diagnose=True,
     )
 
-    logger.add(
-        sys.stdout,
-        level="DEBUG",
-        colorize=True,
-        backtrace=True,
-        diagnose=True
-    )
+    logger.add(sys.stdout, level="DEBUG", colorize=True, backtrace=True, diagnose=True)
